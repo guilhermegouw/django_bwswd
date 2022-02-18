@@ -1,5 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+
+from pages.models import Page
 
 
-def index(request):
-    return render(request, "pages/page.html")
+def index(request, pagename):
+    pagename = "/" + pagename
+    pg = get_object_or_404(Page, permalink=pagename)
+    context = {
+        "title": pg.title,
+        "content": pg.body_text,
+        "last_updated": pg.update_date,
+        "page_list": Page.objects.all(),
+    }
+    # assert False
+    return render(request, "pages/page.html", context)
